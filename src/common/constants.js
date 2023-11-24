@@ -1,0 +1,1 @@
+export const clerkPubKey = 'pk_test_Zmx1ZW50LXRvcnRvaXNlLTYxLmNsZXJrLmFjY291bnRzLmRldiQ';
