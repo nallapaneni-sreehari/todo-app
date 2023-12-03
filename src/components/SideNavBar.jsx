@@ -3,10 +3,10 @@ import { Link } from "react-router-dom";
 
 function SideNavBar() {
   return (
-    <div className="w-52 h-screen border-r border-gray-400">
+    <div className="w-52">
       <nav className="">
         <ul className="w-full menu menu-horizontal font-bold gap-2">
-          <li className="w-48">
+          <li className="w-48 px-4 py-2">
             <Link to={"/dashboard"}>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -25,7 +25,7 @@ function SideNavBar() {
               Dashboard
             </Link>
           </li>
-          <li className="w-48">
+          <li className="w-48 px-4 py-2">
             <Link to={"/tasks"}>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -44,7 +44,7 @@ function SideNavBar() {
               Tasks
             </Link>
           </li>
-          <li className="w-48">
+          <li className="w-48 px-4 py-2">
             <Link to={"/settings"}>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -68,7 +68,7 @@ function SideNavBar() {
               Settings
             </Link>
           </li>
-          <li className="w-48">
+          <li className="w-48 px-4 py-2">
             <Link to={"/help"}>
               <svg
                 xmlns="http://www.w3.org/2000/svg"

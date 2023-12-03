@@ -1,22 +1,22 @@
-import './App.css'
-import Layout from './Layout'
-import Toast from './components/Toast'
-import NavBar from './components/NavBar'
-import { clerkPubKey } from './common/constants';
-import { ClerkProvider } from '@clerk/clerk-react';
-import SideNavBar from './components/SideNavBar';
+import "./App.css";
+import Layout from "./Layout";
+import Toast from "./components/Toast";
+import NavBar from "./components/NavBar";
+import { clerkPubKey } from "./common/constants";
+import { ClerkProvider } from "@clerk/clerk-react";
+import SideNavBar from "./components/SideNavBar";
 
 function App() {
-
   return (
-    <div className='font-urbanist py-5'>
+    <div className="font-urbanist py-5">
       <ClerkProvider publishableKey={clerkPubKey}>
-
-        {/* <Toast /> */}
-        <div className='flex'>
-          <div className='w-full flex flex-col'>
+        <div className="top-50">
+          <Toast />
+        </div>
+        <div className="flex">
+          <div className="w-full flex flex-col">
             <NavBar />
-            <div className='flex'>
+            <div className="flex">
               <SideNavBar />
               <Layout></Layout>
             </div>
@@ -24,7 +24,7 @@ function App() {
         </div>
       </ClerkProvider>
     </div>
-  )
+  );
 }
 
-export default App
+export default App;
