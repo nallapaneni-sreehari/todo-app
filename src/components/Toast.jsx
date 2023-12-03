@@ -1,8 +1,18 @@
 import React from "react";
+import AOS from "aos";
+import "aos/dist/aos.css";
+import { useState } from "react";
 
-function Toast({ msg }) {
+function Toast({ msg, status }) {
+  useState(() => {
+    AOS.init();
+  }, []);
+
   return (
-    <div className="toast toast-end toast-bottom text-xl font-[500]">
+    <div
+      // data-aos="fade-in"
+      className="z-[999] toast toast-end toast-bottom text-xl font-[500]"
+    >
       <div className="bg-green-300 flex justify-between items-center alert alert-success">
         <div className="text-green-600 flex gap-2 justify-center items-center">
           <svg

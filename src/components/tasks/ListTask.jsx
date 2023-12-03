@@ -1,12 +1,43 @@
 import React from "react";
+import { useRef } from "react";
+import { useEffect } from "react";
+import { useState } from "react";
+import AOS from "aos";
+import "aos/dist/aos.css";
 
-function ListTask() {
+function ListTask({ setShowToast, setToastProps, props }) {
+  const [todoList, setTodoList] = useState([]);
+  const listFetched = useRef(false);
+
+  const fetchTodoList = async () => {
+    const data = await fetch(
+      "https://656c51e3e1e03bfd572e307d.mockapi.io/api/v1/tasks"
+    )
+      .then((res) => res.json())
+      .then((data) => {
+        console.log(data);
+        setTodoList(data);
+      })
+      .catch((e) => {
+        console.log("Error while fetching data :: ", e);
+        setTodoList(data);
+      });
+  };
+  useEffect(() => {
+    AOS.init();
+    if (!listFetched.current) {
+      fetchTodoList();
+      listFetched.current = true;
+    }
+  }, []);
+
   return (
     <div className="w-full">
-      <div className="p-5 flex justify-center items-center">
+      <div className="flex justify-center items-center mb-5">
         <h1 className="text-3xl font-[600]">Your Tasks</h1>
       </div>
-      <div className="w-full flex flex-col justify-center items-center">
+      {/* Search & Filters */}
+      <div className="mb-5 w-full flex flex-col justify-center items-center">
         <div className="w-3/5 flex gap-10 items-center">
           <input
             className="w-1/2 px-6 py-4 border border-gray-400 rounded-xl"
@@ -53,43 +84,95 @@ function ListTask() {
             </button>
           </div>
         </div>
+        {/* Each task list */}
         <div className="mt-5 gap-12 grid grid-cols-4">
-          <Task />
-          <Task />
-          <Task />
-          <Task />
-          <Task />
-          <Task />
-          <Task />
+          {todoList.length ? (
+            todoList.map((task) => {
+              return (
+                <Task setShowToast={setShowToast} key={task.id} task={task} />
+              );
+            })
+          ) : (
+            <>No tasks found !</>
+          )}
         </div>
       </div>
     </div>
   );
 }
 
-function Task(task) {
+function Task({ task, setShowToast }) {
+  console.log("task :: ", task);
+
+  function handleStatusChange(event) {
+    setShowToast(true);
+    setTimeout(() => {
+      setShowToast(false);
+    }, 3000);
+  }
+
+  let badgeColor =
+    task.status == "completed"
+      ? "bg-green-200 text-green-600"
+      : "bg-orange-200 text-orange-600";
   return (
-    <div class="max-w-sm p-6 border border-gray-200 rounded-lg shadow">
-      <div className="relative flex flex-col justify-center pb-5 items-start px-5">
+    <div
+      data-aos="zoom-in"
+      className="h-64S relative max-w-sm pt-8 pb-5 border border-gray-200 rounded-lg shadow"
+    >
+      <div
+        className={`${badgeColor} flex justify-between items-center gap-1 absolute top-5 right-5 px-1 py-0.5 rounded-xl`}
+      >
+        {task.status == "completed" ? (
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            strokeWidth={1.5}
+            stroke="currentColor"
+            className="w-6 h-6"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+            />
+          </svg>
+        ) : (
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            strokeWidth={1.5}
+            stroke="currentColor"
+            className="w-6 h-6"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z"
+            />
+          </svg>
+        )}
+
+        <span className="capitalize">{task.status}</span>
+      </div>
+      <div className="mt-5 flex flex-col justify-center pb-5 items-start px-5">
         <a href="#">
-          <h5 class="mb-2 text-2xl font-bold tracking-tight">
-            Buy a tooth brush
+          <h5 className="mb-2 text-2xl font-bold tracking-tight">
+            {task.title}
           </h5>
         </a>
-        <p class="mb-3 font-normal text-gray-400">
-          Need to go to super market and buy items
-        </p>
-        <div className="absolute top-0 right-0 badge badge-success badge-lg">
-          Completed
-        </div>
+        <p className="mb-3 font-normal text-gray-400">{task.description}</p>
       </div>
       {/* Actions */}
-      <div className="flex justify-between items-center">
+      <div className="px-5 flex justify-between items-center">
         <div className="flex justify-end gap-5 items-center">
           <select
             className="px-4 py-2 rounded-xl outline-none border-none"
             name="status"
             id="status"
+            onChange={handleStatusChange}
           >
             Status
             <option value="pending">Pending</option>
