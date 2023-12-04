@@ -26,7 +26,7 @@ function App() {
               <div className="w-1/6">
                 <SideNavBar />
               </div>
-              <div className="4/5">
+              <div className="w-4/5">
                 <Layout
                   setShowToast={setShowToast}
                   setToastProps={setToastProps}

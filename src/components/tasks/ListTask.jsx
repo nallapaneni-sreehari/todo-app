@@ -4,9 +4,13 @@ import { useEffect } from "react";
 import { useState } from "react";
 import AOS from "aos";
 import "aos/dist/aos.css";
+import { useUser } from "@clerk/clerk-react";
 
 function ListTask({ setShowToast, setToastProps, props }) {
   const [todoList, setTodoList] = useState([]);
+  const [task, setTask] = useState({});
+  const { isLoaded, isSignedIn, user } = useUser();
+
   const listFetched = useRef(false);
 
   const fetchTodoList = async () => {
@@ -23,6 +27,39 @@ function ListTask({ setShowToast, setToastProps, props }) {
         setTodoList(data);
       });
   };
+
+  const handleTaskChange = (key, val) => {
+    let obj = {};
+    obj[key] = val;
+    setTask(prev => ({ ...prev, ...obj }));
+    console.log('Task :: ', task);
+  }
+
+  const createTask = async () => {
+    console.log('creating task :: ', task)
+    if (!task.title || !task.description) {
+      return;
+    }
+    let payload = {...task, status: 'pending', email: user};
+    const data = await fetch(
+      "https://656c51e3e1e03bfd572e307d.mockapi.io/api/v1/tasks",
+      {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      }
+    )
+      .then((res) => res.json())
+      .then((data) => {
+        console.log('created :: ', data);
+        // setTodoList(data);
+      })
+      .catch((e) => {
+        console.log("Error while fetching data :: ", e);
+        // setTodoList(data);
+      });
+  }
+
   useEffect(() => {
     AOS.init();
     if (!listFetched.current) {
@@ -38,14 +75,60 @@ function ListTask({ setShowToast, setToastProps, props }) {
       </div>
       {/* Search & Filters */}
       <div className="mb-5 w-full flex flex-col justify-center items-center">
-        <div className="w-3/5 flex gap-10 items-center">
-          <input
-            className="w-1/2 px-6 py-4 border border-gray-400 rounded-xl"
-            type="text"
-            name="search"
-            id="search"
-            placeholder="Search for task"
-          />
+        <div className="w-full flex gap-10 items-center">
+          <div className="w-full flex justify-between items-center gap-5">
+            <button onClick={() => document.getElementById('my_modal_3').showModal()} className="w-1/2 text-normal flex gap-2 items-center px-2 py-4 rounded-xl bg-green-200 hover:bg-green-600 text-green-700 hover:text-white ease-in duration-300">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v6m3-3H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              <span>Create a task</span>
+            </button>
+            <dialog id="my_modal_3" className="modal">
+              <div className="modal-box">
+                <form method="dialog">
+                  <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
+                </form>
+                <h3 className="font-bold text-lg">Create a new task</h3>
+                <div className="p-5 flex flex-col gap-5 justify-center items-center">
+                  <input
+                    className="w-full px-6 py-4 border border-gray-400 rounded-xl"
+                    type="text"
+                    name="title"
+                    id="title"
+                    placeholder="Task title"
+                    onChange={(e) => {
+                      handleTaskChange('title', e.target.value);
+                    }}
+                  />
+                  <textarea
+                    className=" w-full px-6 py-4 border border-gray-400 rounded-xl"
+                    type="text"
+                    name="description"
+                    id="description"
+                    placeholder="Task description"
+                    rows={5}
+                    onChange={(e) => {
+                      handleTaskChange('description', e.target.value);
+                    }}
+                  />
+                </div>
+                <div className="flex justify-end items-center">
+                  <button
+                    className="mt-5 px-4 py-2 bg-indigo-400 hover:bg-indigo-600 text-white ease-in duration-300 rounded-xl"
+                    onClick={createTask}
+                  >Create</button>
+                </div>
+              </div>
+            </dialog>
+
+            <input
+              className="w-full px-6 py-4 border border-gray-400 rounded-xl"
+              type="text"
+              name="search"
+              id="search"
+              placeholder="Search for task"
+            />
+          </div>
           {/* <select
             className="px-6 py-4 rounded-xl border border-gray-400"
             name="filters"
@@ -85,7 +168,7 @@ function ListTask({ setShowToast, setToastProps, props }) {
           </div>
         </div>
         {/* Each task list */}
-        <div className="mt-5 gap-12 grid grid-cols-4">
+        <div className="mt-5 gap-5 grid grid-cols-3">
           {todoList.length ? (
             todoList.map((task) => {
               return (
