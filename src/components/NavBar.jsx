@@ -5,6 +5,8 @@ import { Link } from "react-router-dom";
 function NavBar() {
   const [light, setLight] = useState(true);
   const { isLoaded, isSignedIn, user } = useUser();
+  const [currentTheme, setCurrentTheme] = useState('dark');
+
   console.log(user);
 
   const handleThemeChange = (event) => {
@@ -12,11 +14,12 @@ function NavBar() {
 
     const theme = el.getAttribute("data-theme") == "light" ? "dark" : "light";
 
+    setCurrentTheme(theme);
     el.setAttribute("data-theme", theme);
   };
 
   return (
-    <nav className="bg-white mb-5 fixed top-0 z-[999] w-full h-[70px] shadow-lg px-5 flex justify-between items-center">
+    <nav className={`${currentTheme == "light" ? 'bg-white' : 'bg-[#1f2937]'} mb-5 fixed top-0 z-[999] w-full h-[70px] shadow-lg px-5 flex justify-between items-center`}>
       <div className="">
         <a className="flex gap-1 justify-center items-center" href="/">
           <img className="w-10 h-10" src="src/assets/icons/logo.png" alt="" />

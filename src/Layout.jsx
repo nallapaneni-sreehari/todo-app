@@ -6,6 +6,7 @@ import ListTask from "./components/tasks/ListTask";
 import NotFound from "./components/NotFound";
 import Task from "./components/tasks/Task";
 import Login from "./components/user/Login";
+import Help from "./components/Help";
 
 function Layout({ setShowToast, setToastProps, props }) {
   return (
@@ -13,6 +14,7 @@ function Layout({ setShowToast, setToastProps, props }) {
       <Route path="/" element={<Home />}></Route>
 
       <Route path="/login" Component={Login}></Route>
+      <Route path="/help" Component={Help}></Route>
       <Route path="/tasks">
         <Route
           path=""

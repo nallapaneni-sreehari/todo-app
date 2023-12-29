@@ -5,7 +5,7 @@ function SideNavBar() {
   return (
       <>
         <ul className="w-1/6 menu menu-horizontal font-bold gap-2">
-          <li className="text-2xl w-48 px-4 py-2">
+          {/* <li className="text-xl w-12 md:w-48 px-4 py-2">
             <Link to={"/dashboard"}>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -21,10 +21,11 @@ function SideNavBar() {
                   d="M3.75 3v11.25A2.25 2.25 0 006 16.5h2.25M3.75 3h-1.5m1.5 0h16.5m0 0h1.5m-1.5 0v11.25A2.25 2.25 0 0118 16.5h-2.25m-7.5 0h7.5m-7.5 0l-1 3m8.5-3l1 3m0 0l.5 1.5m-.5-1.5h-9.5m0 0l-.5 1.5M9 11.25v1.5M12 9v3.75m3-6v6"
                 />
               </svg>
-              Dashboard
+              <span className="hidden md:block">Dashboard</span>
+
             </Link>
-          </li>
-          <li className="text-2xl w-48 px-4 py-2">
+          </li> */}
+          <li className="text-xl w-12 md:w-48 px-4 py-2">
             <Link to={"/tasks"}>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -40,10 +41,11 @@ function SideNavBar() {
                   d="M6 6.878V6a2.25 2.25 0 012.25-2.25h7.5A2.25 2.25 0 0118 6v.878m-12 0c.235-.083.487-.128.75-.128h10.5c.263 0 .515.045.75.128m-12 0A2.25 2.25 0 004.5 9v.878m13.5-3A2.25 2.25 0 0119.5 9v.878m0 0a2.246 2.246 0 00-.75-.128H5.25c-.263 0-.515.045-.75.128m15 0A2.25 2.25 0 0121 12v6a2.25 2.25 0 01-2.25 2.25H5.25A2.25 2.25 0 013 18v-6c0-.98.626-1.813 1.5-2.122"
                 />
               </svg>
-              Tasks
+              <span className="hidden md:block">Tasks</span>
+
             </Link>
           </li>
-          <li className="text-2xl w-48 px-4 py-2">
+          {/* <li className="text-xl w-12 md:w-48 px-4 py-2">
             <Link to={"/settings"}>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -64,10 +66,10 @@ function SideNavBar() {
                   d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
                 />
               </svg>
-              Settings
+              <span className="hidden md:block">Settings</span>
             </Link>
-          </li>
-          <li className="text-2xl w-48 px-4 py-2">
+          </li> */}
+          <li className="text-xl w-12 md:w-48 px-4 py-2">
             <Link to={"/help"}>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -83,7 +85,7 @@ function SideNavBar() {
                   d="M16.712 4.33a9.027 9.027 0 011.652 1.306c.51.51.944 1.064 1.306 1.652M16.712 4.33l-3.448 4.138m3.448-4.138a9.014 9.014 0 00-9.424 0M19.67 7.288l-4.138 3.448m4.138-3.448a9.014 9.014 0 010 9.424m-4.138-5.976a3.736 3.736 0 00-.88-1.388 3.737 3.737 0 00-1.388-.88m2.268 2.268a3.765 3.765 0 010 2.528m-2.268-4.796a3.765 3.765 0 00-2.528 0m4.796 4.796c-.181.506-.475.982-.88 1.388a3.736 3.736 0 01-1.388.88m2.268-2.268l4.138 3.448m0 0a9.027 9.027 0 01-1.306 1.652c-.51.51-1.064.944-1.652 1.306m0 0l-3.448-4.138m3.448 4.138a9.014 9.014 0 01-9.424 0m5.976-4.138a3.765 3.765 0 01-2.528 0m0 0a3.736 3.736 0 01-1.388-.88 3.737 3.737 0 01-.88-1.388m2.268 2.268L7.288 19.67m0 0a9.024 9.024 0 01-1.652-1.306 9.027 9.027 0 01-1.306-1.652m0 0l4.138-3.448M4.33 16.712a9.014 9.014 0 010-9.424m4.138 5.976a3.765 3.765 0 010-2.528m0 0c.181-.506.475-.982.88-1.388a3.736 3.736 0 011.388-.88m-2.268 2.268L4.33 7.288m6.406 1.18L7.288 4.33m0 0a9.024 9.024 0 00-1.652 1.306A9.025 9.025 0 004.33 7.288"
                 />
               </svg>
-              Help
+              <span className="hidden md:block">Help</span>
             </Link>
           </li>
         </ul>

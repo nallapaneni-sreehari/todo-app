@@ -8,6 +8,8 @@ import { useUser } from "@clerk/clerk-react";
 
 function ListTask({ setShowToast, setToastProps, props }) {
   const [todoList, setTodoList] = useState([]);
+  const [searchString, setSearchString] = useState('');
+  const [todoListMain, setTodoListMain] = useState([]);
   const [task, setTask] = useState({});
   const { isLoaded, isSignedIn, user } = useUser();
 
@@ -21,10 +23,12 @@ function ListTask({ setShowToast, setToastProps, props }) {
       .then((data) => {
         console.log(data);
         setTodoList(data);
+        setTodoListMain(data);
       })
       .catch((e) => {
         console.log("Error while fetching data :: ", e);
         setTodoList(data);
+        setTodoListMain(data);
       });
   };
 
@@ -40,7 +44,7 @@ function ListTask({ setShowToast, setToastProps, props }) {
     if (!task.title || !task.description) {
       return;
     }
-    let payload = {...task, status: 'pending', email: user};
+    let payload = { ...task, status: 'pending', email: user };
     const data = await fetch(
       "https://656c51e3e1e03bfd572e307d.mockapi.io/api/v1/tasks",
       {
@@ -60,6 +64,43 @@ function ListTask({ setShowToast, setToastProps, props }) {
       });
   }
 
+  function handleFilters(action, value) {
+    let data = [];
+    console.log("todoListMain :::: ", todoListMain);
+    switch (action) {
+      case 'search':
+        setSearchString(value);
+        //search for string
+        console.log("value ::: ", value);
+        if (!value) {
+          setTodoList(todoListMain);
+          return;
+        }
+        data = todoListMain.filter(a => a?.title?.toLowerCase().includes(value.toLowerCase()));
+        setTodoList(data);
+        break;
+      case 'reset':
+        //search for string
+        setTodoList(todoListMain);
+        break;
+      case 'all':
+        //search for string
+        setTodoList(todoListMain);
+        break;
+      case 'completed':
+        //search for string
+        data = todoListMain.filter(a => a.status == "completed");
+        console.log("data ::: ", data);
+        setTodoList(data);
+        break;
+      case 'pending':
+        //search for string
+        data = todoListMain.filter(a => a.status == "pending");
+        setTodoList(data);
+        break;
+    }
+  }
+
   useEffect(() => {
     AOS.init();
     if (!listFetched.current) {
@@ -77,7 +118,7 @@ function ListTask({ setShowToast, setToastProps, props }) {
       <div className="mb-5 w-full flex flex-col justify-center items-center">
         <div className="w-full flex gap-10 items-center">
           <div className="w-full flex justify-between items-center gap-5">
-            <button onClick={() => document.getElementById('my_modal_3').showModal()} className="w-1/2 text-normal flex gap-2 items-center px-2 py-4 rounded-xl bg-green-200 hover:bg-green-600 text-green-700 hover:text-white ease-in duration-300">
+            <button onClick={() => document.getElementById('my_modal_3').showModal()} className="w-48 text-normal flex px-2 py-2 gap-2 justify-center items-center rounded-xl bg-green-200 hover:bg-green-600 text-green-700 hover:text-white ease-in duration-300">
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v6m3-3H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
@@ -91,7 +132,7 @@ function ListTask({ setShowToast, setToastProps, props }) {
                 <h3 className="font-bold text-lg">Create a new task</h3>
                 <div className="p-5 flex flex-col gap-5 justify-center items-center">
                   <input
-                    className="w-full px-6 py-4 border border-gray-400 rounded-xl"
+                    className="w-full px-4 py-2 border border-gray-400 rounded-xl"
                     type="text"
                     name="title"
                     id="title"
@@ -101,7 +142,7 @@ function ListTask({ setShowToast, setToastProps, props }) {
                     }}
                   />
                   <textarea
-                    className=" w-full px-6 py-4 border border-gray-400 rounded-xl"
+                    className=" w-full px-4 py-2 border border-gray-400 rounded-xl"
                     type="text"
                     name="description"
                     id="description"
@@ -121,13 +162,31 @@ function ListTask({ setShowToast, setToastProps, props }) {
               </div>
             </dialog>
 
-            <input
-              className="w-full px-6 py-4 border border-gray-400 rounded-xl"
-              type="text"
-              name="search"
-              id="search"
-              placeholder="Search for task"
-            />
+            <div className="flex w-full items-center relative">
+              <input
+                className="w-full px-4 py-2 border border-gray-400 rounded-xl"
+                type="text"
+                name="search"
+                id="search"
+                value={searchString}
+                placeholder="Search for a task by name"
+                onChange={(e) => {
+                  handleFilters('search', e.target.value);
+                }}
+              />
+              {
+                searchString && <button className="flex items-center justify-center btn btn-xs btn-circle btn-outline absolute right-0 mx-2"
+                  onClick={(e) => {
+                    setSearchString('');
+                    handleFilters('all');
+                  }}
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M6 18 18 6M6 6l12 12" />
+                  </svg>
+                </button>
+              }
+            </div>
           </div>
           {/* <select
             className="px-6 py-4 rounded-xl border border-gray-400"
@@ -139,7 +198,25 @@ function ListTask({ setShowToast, setToastProps, props }) {
             <option value="completed">Completed</option>
           </select> */}
           <div className="flex items-center gap-2">
-            <button className="flex gap-3 justify-between items-center hover:bg-gray-700 ease-in duration-300 hover:text-white rounded-xl border border-gray-400 px-6 py-4">
+            <button className="hover:bg-indigo-700 ease-in duration-300 hover:text-white rounded-xl border border-gray-400 px-4 py-2"
+              onClick={(e) => {
+                handleFilters('pending', '');
+              }}
+            >
+              Pending
+            </button>
+            <button className="hover:bg-indigo-700 ease-in duration-300 hover:text-white rounded-xl border border-gray-400 px-4 py-2"
+              onClick={(e) => {
+                handleFilters('completed', '');
+              }}
+            >
+              Completed
+            </button>
+            <button className="flex gap-1 justify-between items-center hover:bg-gray-700 ease-in duration-300 hover:text-white rounded-xl border border-gray-400 px-4 py-2"
+              onClick={(e) => {
+                handleFilters('reset', '');
+              }}
+            >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
@@ -156,19 +233,18 @@ function ListTask({ setShowToast, setToastProps, props }) {
               </svg>
               <span>Reset</span>
             </button>
-            <button className="hover:bg-indigo-700 ease-in duration-300 hover:text-white rounded-xl border border-gray-400 px-6 py-4">
+            <button className="hover:bg-indigo-700 ease-in duration-300 hover:text-white rounded-xl border border-gray-400 px-4 py-2"
+              onClick={(e) => {
+                handleFilters('all', '');
+              }}
+            >
               All
             </button>
-            <button className="hover:bg-indigo-700 ease-in duration-300 hover:text-white rounded-xl border border-gray-400 px-6 py-4">
-              Pending
-            </button>
-            <button className="hover:bg-indigo-700 ease-in duration-300 hover:text-white rounded-xl border border-gray-400 px-6 py-4">
-              Completed
-            </button>
+
           </div>
         </div>
         {/* Each task list */}
-        <div className="mt-5 gap-5 grid grid-cols-3">
+        <div className="mt-5 gap-5 grid grid-cols-1 md:grid-cols-3">
           {todoList.length ? (
             todoList.map((task) => {
               return (
