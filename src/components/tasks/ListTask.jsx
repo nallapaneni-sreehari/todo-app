@@ -8,7 +8,7 @@ import { useUser } from "@clerk/clerk-react";
 
 function ListTask({ setShowToast, setToastProps, props }) {
   const [todoList, setTodoList] = useState([]);
-  const [searchString, setSearchString] = useState('');
+  const [searchString, setSearchString] = useState("");
   const [todoListMain, setTodoListMain] = useState([]);
   const [task, setTask] = useState({});
   const { isLoaded, isSignedIn, user } = useUser();
@@ -27,6 +27,7 @@ function ListTask({ setShowToast, setToastProps, props }) {
       })
       .catch((e) => {
         console.log("Error while fetching data :: ", e);
+
         setTodoList(data);
         setTodoListMain(data);
       });
@@ -35,40 +36,45 @@ function ListTask({ setShowToast, setToastProps, props }) {
   const handleTaskChange = (key, val) => {
     let obj = {};
     obj[key] = val;
-    setTask(prev => ({ ...prev, ...obj }));
-    console.log('Task :: ', task);
-  }
+    setTask((prev) => ({ ...prev, ...obj }));
+    console.log("Task :: ", task);
+  };
 
   const createTask = async () => {
-    console.log('creating task :: ', task)
+    console.log("creating task :: ", task);
     if (!task.title || !task.description) {
       return;
     }
-    let payload = { ...task, status: 'pending', email: user };
+    let payload = { ...task, status: "pending", email: user };
     const data = await fetch(
       "https://656c51e3e1e03bfd572e307d.mockapi.io/api/v1/tasks",
       {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload)
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
       }
     )
       .then((res) => res.json())
       .then((data) => {
-        console.log('created :: ', data);
+        console.log("created :: ", data);
         // setTodoList(data);
+        setToastProps({ msg: "Task created" });
+        setShowToast(true);
+        setTimeout(() => {
+          setShowToast(false);
+        }, 3000);
       })
       .catch((e) => {
         console.log("Error while fetching data :: ", e);
         // setTodoList(data);
       });
-  }
+  };
 
   function handleFilters(action, value) {
     let data = [];
     console.log("todoListMain :::: ", todoListMain);
     switch (action) {
-      case 'search':
+      case "search":
         setSearchString(value);
         //search for string
         console.log("value ::: ", value);
@@ -76,26 +82,28 @@ function ListTask({ setShowToast, setToastProps, props }) {
           setTodoList(todoListMain);
           return;
         }
-        data = todoListMain.filter(a => a?.title?.toLowerCase().includes(value.toLowerCase()));
+        data = todoListMain.filter((a) =>
+          a?.title?.toLowerCase().includes(value.toLowerCase())
+        );
         setTodoList(data);
         break;
-      case 'reset':
+      case "reset":
         //search for string
         setTodoList(todoListMain);
         break;
-      case 'all':
+      case "all":
         //search for string
         setTodoList(todoListMain);
         break;
-      case 'completed':
+      case "completed":
         //search for string
-        data = todoListMain.filter(a => a.status == "completed");
+        data = todoListMain.filter((a) => a.status == "completed");
         console.log("data ::: ", data);
         setTodoList(data);
         break;
-      case 'pending':
+      case "pending":
         //search for string
-        data = todoListMain.filter(a => a.status == "pending");
+        data = todoListMain.filter((a) => a.status == "pending");
         setTodoList(data);
         break;
     }
@@ -118,16 +126,32 @@ function ListTask({ setShowToast, setToastProps, props }) {
       <div className="mb-5 w-full flex flex-col justify-center items-center">
         <div className="w-full flex gap-10 items-center">
           <div className="w-full flex justify-between items-center gap-5">
-            <button onClick={() => document.getElementById('my_modal_3').showModal()} className="w-48 text-normal flex px-2 py-2 gap-2 justify-center items-center rounded-xl bg-green-200 hover:bg-green-600 text-green-700 hover:text-white ease-in duration-300">
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v6m3-3H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+            <button
+              onClick={() => document.getElementById("my_modal_3").showModal()}
+              className="w-48 text-normal flex px-2 py-2 gap-2 justify-center items-center rounded-xl bg-green-200 hover:bg-green-600 text-green-700 hover:text-white ease-in duration-300"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                strokeWidth={1.5}
+                stroke="currentColor"
+                className="w-6 h-6"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M12 9v6m3-3H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"
+                />
               </svg>
               <span>Create a task</span>
             </button>
             <dialog id="my_modal_3" className="modal">
               <div className="modal-box">
                 <form method="dialog">
-                  <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
+                  <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">
+                    ✕
+                  </button>
                 </form>
                 <h3 className="font-bold text-lg">Create a new task</h3>
                 <div className="p-5 flex flex-col gap-5 justify-center items-center">
@@ -138,7 +162,7 @@ function ListTask({ setShowToast, setToastProps, props }) {
                     id="title"
                     placeholder="Task title"
                     onChange={(e) => {
-                      handleTaskChange('title', e.target.value);
+                      handleTaskChange("title", e.target.value);
                     }}
                   />
                   <textarea
@@ -149,7 +173,7 @@ function ListTask({ setShowToast, setToastProps, props }) {
                     placeholder="Task description"
                     rows={5}
                     onChange={(e) => {
-                      handleTaskChange('description', e.target.value);
+                      handleTaskChange("description", e.target.value);
                     }}
                   />
                 </div>
@@ -157,7 +181,9 @@ function ListTask({ setShowToast, setToastProps, props }) {
                   <button
                     className="mt-5 px-4 py-2 bg-indigo-400 hover:bg-indigo-600 text-white ease-in duration-300 rounded-xl"
                     onClick={createTask}
-                  >Create</button>
+                  >
+                    Create
+                  </button>
                 </div>
               </div>
             </dialog>
@@ -171,21 +197,33 @@ function ListTask({ setShowToast, setToastProps, props }) {
                 value={searchString}
                 placeholder="Search for a task by name"
                 onChange={(e) => {
-                  handleFilters('search', e.target.value);
+                  handleFilters("search", e.target.value);
                 }}
               />
-              {
-                searchString && <button className="flex items-center justify-center btn btn-xs btn-circle btn-outline absolute right-0 mx-2"
+              {searchString && (
+                <button
+                  className="flex items-center justify-center btn btn-xs btn-circle btn-outline absolute right-0 mx-2"
                   onClick={(e) => {
-                    setSearchString('');
-                    handleFilters('all');
+                    setSearchString("");
+                    handleFilters("all");
                   }}
                 >
-                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M6 18 18 6M6 6l12 12" />
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    strokeWidth={1.5}
+                    stroke="currentColor"
+                    className="w-6 h-6"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M6 18 18 6M6 6l12 12"
+                    />
                   </svg>
                 </button>
-              }
+              )}
             </div>
           </div>
           {/* <select
@@ -198,23 +236,26 @@ function ListTask({ setShowToast, setToastProps, props }) {
             <option value="completed">Completed</option>
           </select> */}
           <div className="flex items-center gap-2">
-            <button className="hover:bg-indigo-700 ease-in duration-300 hover:text-white rounded-xl border border-gray-400 px-4 py-2"
+            <button
+              className="hover:bg-indigo-700 ease-in duration-300 hover:text-white rounded-xl border border-gray-400 px-4 py-2"
               onClick={(e) => {
-                handleFilters('pending', '');
+                handleFilters("pending", "");
               }}
             >
               Pending
             </button>
-            <button className="hover:bg-indigo-700 ease-in duration-300 hover:text-white rounded-xl border border-gray-400 px-4 py-2"
+            <button
+              className="hover:bg-indigo-700 ease-in duration-300 hover:text-white rounded-xl border border-gray-400 px-4 py-2"
               onClick={(e) => {
-                handleFilters('completed', '');
+                handleFilters("completed", "");
               }}
             >
               Completed
             </button>
-            <button className="flex gap-1 justify-between items-center hover:bg-gray-700 ease-in duration-300 hover:text-white rounded-xl border border-gray-400 px-4 py-2"
+            <button
+              className="flex gap-1 justify-between items-center hover:bg-gray-700 ease-in duration-300 hover:text-white rounded-xl border border-gray-400 px-4 py-2"
               onClick={(e) => {
-                handleFilters('reset', '');
+                handleFilters("reset", "");
               }}
             >
               <svg
@@ -233,18 +274,18 @@ function ListTask({ setShowToast, setToastProps, props }) {
               </svg>
               <span>Reset</span>
             </button>
-            <button className="hover:bg-indigo-700 ease-in duration-300 hover:text-white rounded-xl border border-gray-400 px-4 py-2"
+            <button
+              className="hover:bg-indigo-700 ease-in duration-300 hover:text-white rounded-xl border border-gray-400 px-4 py-2"
               onClick={(e) => {
-                handleFilters('all', '');
+                handleFilters("all", "");
               }}
             >
               All
             </button>
-
           </div>
         </div>
         {/* Each task list */}
-        <div className="mt-5 gap-5 grid grid-cols-1 md:grid-cols-3">
+        <div className="w-full mt-5 gap-5 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
           {todoList.length ? (
             todoList.map((task) => {
               return (
@@ -331,6 +372,7 @@ function Task({ task, setShowToast }) {
             className="px-4 py-2 rounded-xl outline-none border-none"
             name="status"
             id="status"
+            value={task.status}
             onChange={handleStatusChange}
           >
             Status

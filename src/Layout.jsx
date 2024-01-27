@@ -1,5 +1,10 @@
 import React from "react";
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Navigate,
+  Route,
+  Routes,
+} from "react-router-dom";
 import Home from "./components/Home";
 import CreateTask from "./components/tasks/CreateTask";
 import ListTask from "./components/tasks/ListTask";
@@ -11,7 +16,7 @@ import Help from "./components/Help";
 function Layout({ setShowToast, setToastProps, props }) {
   return (
     <Routes>
-      <Route path="/" element={<Home />}></Route>
+      <Route path="/" element={<Navigate to={"/tasks"} />}></Route>
 
       <Route path="/login" Component={Login}></Route>
       <Route path="/help" Component={Help}></Route>

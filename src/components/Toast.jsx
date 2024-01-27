@@ -3,7 +3,8 @@ import AOS from "aos";
 import "aos/dist/aos.css";
 import { useState } from "react";
 
-function Toast({ msg, status }) {
+function Toast({ props }) {
+  console.log("msg :: ", props);
   useState(() => {
     AOS.init();
   }, []);
@@ -29,7 +30,7 @@ function Toast({ msg, status }) {
               d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
             />
           </svg>
-          <span>Task updated</span>
+          <span>{props.msg ? props.msg : "Task updated"}</span>
         </div>
         <div className="bg-green-200 w-full h-full rounded-[5px] cursor-pointer">
           <svg
