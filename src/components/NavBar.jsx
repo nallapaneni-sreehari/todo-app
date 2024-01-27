@@ -26,7 +26,11 @@ function NavBar() {
     >
       <div className="">
         <a className="flex gap-1 justify-center items-center" href="/">
-          <img className="w-10 h-10" src="src\assets\icons\logo.png" alt="" />
+          <img
+            className="w-10 h-10"
+            src="https://cdn3d.iconscout.com/3d/premium/thumb/project-task-management-5374060-4496029.png"
+            alt=""
+          />
           <span className="text-xl font-[700]">Todor</span>
         </a>
       </div>
